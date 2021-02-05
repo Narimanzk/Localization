@@ -1,0 +1,72 @@
+#VRML_SIM R2021a utf8
+WorldInfo {
+  basicTimeStep 16
+  contactProperties [
+    ContactProperties {
+      material1 "DPM-Tile"
+      material2 "Rubber"
+      coulombFriction [
+        1000
+      ]
+      bounce 0.1
+      softCFM 0.0001
+    }
+  ]
+}
+Viewpoint {
+  orientation 0 1 0 0
+  position 1.3660213899659233 1.1702597229658414 6.246554076144726
+}
+DPM-Floor {
+  dimension 8 8
+  wallHeight 0.2
+  children [
+    DPM-Marker {
+      translation 0.15 0.15
+      r1 0
+      r2 0.015
+      sections 25
+      ringColor 1 0 0
+      borderColor 1 0 0
+    }
+    DPM-Marker {
+      translation 0.15 0.25
+      r1 0
+      r2 0.015
+      sections 25
+      ringColor 0 0 1
+      borderColor 0 0 1
+    }
+    DPM-Marker {
+      translation 2.2709 2.302
+      r1 0
+      r2 0.015
+      sections 25
+      ringColor 1 0.3 0.3
+      borderColor 1 0.3 0.3
+      drawBackFace TRUE
+    }
+    DPM-Marker {
+      translation 2.2885 2.2915
+      r1 0
+      r2 0.015
+      sections 25
+      ringColor 1 0.3 0.3
+      borderColor 1 0.3 0.3
+      drawBackFace TRUE
+    }
+    DPM-Marker {
+      translation 2.27 2.28
+      r1 0
+      r2 0.028
+      sections 3
+      ringColor 1 0.3 0.3
+      borderColor 1 0.3 0.3
+      drawBackFace TRUE
+    }
+  ]
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
