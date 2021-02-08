@@ -2,6 +2,7 @@ package ca.mcgill.ecse211.project;
 
 import static ca.mcgill.ecse211.project.Resources.*;
 import simlejos.ExecutionController;
+import simlejos.robotics.SampleProvider;
 
 
 /**
@@ -20,8 +21,7 @@ public class LightLocalizer {
   private static float[] sensor2_data = new float[colorSensor2.sampleSize()];
   
   //Values to operate color sensor
-  private static int current_color_value_s1 = 1000;
-  private static int current_color_value_s2 = 1000;
+  private static int current_color_value = 1000;
   
   /**
    * Localizes the robot to (x, y, theta) = (1, 1, 0).
@@ -33,12 +33,30 @@ public class LightLocalizer {
     
     //First time that the robot pass the black line
     while (true) {
-      if (blackLineTrigger()) {
+      if (blackLineTrigger(colorSensor1, sensor1_data) &&  blackLineTrigger(colorSensor2, sensor2_data)) {
         leftMotor.stop();
         rightMotor.stop();
         moveStraightFor(-0.0273 * 2);
         turnBy(90.0);
         break;
+      }
+      else if (blackLineTrigger(colorSensor1, sensor1_data)) {
+        rightMotor.stop();
+        if (blackLineTrigger(colorSensor2, sensor2_data)) {
+          leftMotor.stop();
+          moveStraightFor(-0.0273 * 2);
+          turnBy(90.0);
+          break;
+        }
+      }
+      else if (blackLineTrigger(colorSensor2, sensor2_data)) {
+        leftMotor.stop();
+        if (blackLineTrigger(colorSensor1, sensor1_data)) {
+          rightMotor.stop();
+          moveStraightFor(-0.0273 * 2);
+          turnBy(90.0);
+          break;
+        }
       }
     }
     //Moving toward (1,1)
@@ -46,17 +64,33 @@ public class LightLocalizer {
       leftMotor.setSpeed(FORWARD_SPEED);
       rightMotor.setSpeed(FORWARD_SPEED);
       leftMotor.forward();
-      rightMotor.forward();
-      
-      //When it reaches (1,1)
-      if (blackLineTrigger()) {
+      rightMotor.forward();      
+//      //When it reaches (1,1)
+      if (blackLineTrigger(colorSensor1, sensor1_data) &&  blackLineTrigger(colorSensor2, sensor2_data)) {
         leftMotor.stop();
         rightMotor.stop();
         moveStraightFor(-0.0273 * 2);
         turnBy(-90.0);
         break;
       }
-      
+      else if (blackLineTrigger(colorSensor1, sensor1_data)) {
+        rightMotor.stop();
+        if (blackLineTrigger(colorSensor2, sensor2_data)) {
+          leftMotor.stop();
+          moveStraightFor(-0.0273 * 2);
+          turnBy(-90.0);
+          break;
+        }
+      }
+      else if (blackLineTrigger(colorSensor2, sensor2_data)) {
+        leftMotor.stop();
+        if (blackLineTrigger(colorSensor1, sensor1_data)) {
+          rightMotor.stop();
+          moveStraightFor(-0.0273 * 2);
+          turnBy(-90.0);
+          break;
+        }
+      }
     }
   }
   
@@ -124,18 +158,18 @@ public class LightLocalizer {
    * certain conditions, however it has been tested and conditioned to minimize false negatives.
    * @return true if black line is detected by both sensors.
    */
-  public static boolean blackLineTrigger() {
-    colorSensor1.fetchSample(sensor1_data, 0);
-    colorSensor2.fetchSample(sensor2_data, 0);
+  public static boolean blackLineTrigger(SampleProvider colorSensor, float[] sensor) {
+    colorSensor.fetchSample(sensor, 0);
     
-    current_color_value_s1 = (int) (sensor1_data[0] * 100);
-    current_color_value_s2 = (int) (sensor2_data[0] * 100);
+    current_color_value = (int) (sensor[0] * 100);
     
-    if (current_color_value_s1 < THRESHOLD && current_color_value_s2 < THRESHOLD) {
+    if (current_color_value < THRESHOLD) {
       return true;
     } else {
       return false;
     }
   }
+  
+  
 
 }

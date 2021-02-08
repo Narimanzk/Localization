@@ -35,16 +35,16 @@ public class Resources {
   public static final double WHEEL_RAD = 0.021;
   
   /** The robot width in meters. */
-  public static final double BASE_WIDTH = 0.158;
+  public static final double BASE_WIDTH = 0.16;
   
   /** The speed at which the robot moves forward in degrees per second. */
-  public static final int FORWARD_SPEED = 300;
+  public static final int FORWARD_SPEED = 200;
   
   /** The speed at which the robot rotates in degrees per second. */
-  public static final int ROTATE_SPEED = 100;
+  public static final int ROTATE_SPEED = 80;
   
   /** The motor acceleration in degrees per second squared. */
-  public static final int ACCELERATION = 3000;
+  public static final int ACCELERATION = 1000;
   
   // Other constants and class variables
   
@@ -57,19 +57,13 @@ public class Resources {
   /** The limit of invalid samples that we read from the US sensor before assuming no obstacle. */
   public static final int INVALID_SAMPLE_LIMIT = 20;
   
-  /**
-   * Arbitrary threshold constant for rising and falling edge cases for the ultrasonic localizer
-   */
+  /** Threshold constant for rising and falling edge cases for the ultrasonic localizer. */
   public static final int COMMON_D = 40;
 
-  /**
-   * Noise margin constant for falling edge ultrasonic localizer
-   */
+  /** Noise margin constant for falling edge ultrasonic localizer. */
   public static final int FALLINGEDGE_K = 1;
 
-  /**
-   * Noise margin constant for rising edge ultrasonic localizer
-   */
+  /** Noise margin constant for rising edge ultrasonic localizer. */
   public static final int RISINGEDGE_K = 3;
   
   /** The odometer. */
@@ -91,5 +85,7 @@ public class Resources {
   
   /** The color sensor sample provider. */
   public static final SampleProvider colorSensor2 = new EV3ColorSensor(SensorPort.S3).getRedMode();
+  
+  public static final SampleProvider colorSensor3 = new EV3ColorSensor(SensorPort.S4).getRedMode();
   
 }
