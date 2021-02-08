@@ -14,8 +14,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.9953586588435023 0.02392541033863228 0.09321327698022697 5.778440178369053
-  position 0.6687051634178947 -0.9396934125629691 3.7170444487252308
+  orientation -0.9976604064197893 0.014000435361408868 0.06691562801014463 5.869745255017595
+  position 0.12901553439242125 -0.02747443046432578 0.4878662066251859
 }
 DPM-Floor {
   dimension 8 8
@@ -71,14 +71,18 @@ TexturedBackground {
 TexturedBackgroundLight {
 }
 DPM-Robot {
-  hidden rotation_5 -0.9454828423650797 -0.19608146663232529 -0.2600274086256408 1.8988486450565771
-  translation 0.18 0.129999 0.07
-  rotation 0 0 -1 -5.307179586466759e-06
+  translation 0.14398219308877544 0.1656933752513604 0.061908772619923225
+  rotation -0.35518372400854986 -0.16107255893322253 0.9208149395823906 0
   children [
     EV3-ColorSensor {
+      name "S3"
+      translation -0.083 -0.032 -0.018
+      rotation -0.5773489358533613 0.5773529358529169 0.5773489358533613 -2.094395307179586
+    }
+    EV3-ColorSensor {
       name "S2"
-      translation -9.11884e-08 0.058 -0.042
-      rotation 3.3905113482557537e-09 0.70710528118436 0.707108281185553 3.14159
+      translation 0.0833 -0.032 -0.018
+      rotation 0.5773502691896258 0.5773502691896258 0.5773502691896258 2.09439
     }
     BallCaster {
       translation 0 -0.04 -0.05
@@ -86,6 +90,7 @@ DPM-Robot {
     EV3-LargeMotor {
       translation -0.064 0.0618 0.022
       rotation 0 1 0 -1.5707953071795862
+      position -6.6144281163360574e-09
       children [
         EV3-Ultrasonic {
           name "S1"
@@ -101,6 +106,7 @@ DPM-Robot {
     EV3-LargeMotor {
       name "D"
       translation 0.056 0.022 -0.026
+      position -4.191080368939171
       children [
         Wheel {
           translation 0.0215 -0.001 0
@@ -112,6 +118,7 @@ DPM-Robot {
       name "A"
       translation -0.056 0.022 -0.026
       rotation 0 0 1 -5.307179586466759e-06
+      position 4.203640278263813
       children [
         Wheel {
           translation -0.0217 -0.001 0
@@ -125,5 +132,5 @@ DPM-Robot {
     EV3 {
     }
   ]
-  controller "Lab1"
+  controller "Lab3"
 }
