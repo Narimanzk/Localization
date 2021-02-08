@@ -35,13 +35,13 @@ public class Resources {
   public static final double WHEEL_RAD = 0.021;
   
   /** The robot width in meters. */
-  public static final double BASE_WIDTH = 0;
+  public static final double BASE_WIDTH = 0.158;
   
   /** The speed at which the robot moves forward in degrees per second. */
-  public static final int FORWARD_SPEED = 0;
+  public static final int FORWARD_SPEED = 300;
   
   /** The speed at which the robot rotates in degrees per second. */
-  public static final int ROTATE_SPEED = 0;
+  public static final int ROTATE_SPEED = 100;
   
   /** The motor acceleration in degrees per second squared. */
   public static final int ACCELERATION = 3000;
@@ -72,6 +72,9 @@ public class Resources {
   public static final EV3UltrasonicSensor usSensor = new EV3UltrasonicSensor(SensorPort.S1);
   
   /** The color sensor sample provider. */
-  public static final SampleProvider colorSensor = new EV3ColorSensor(SensorPort.S2).getRedMode();
+  public static final SampleProvider colorSensor1 = new EV3ColorSensor(SensorPort.S2).getRedMode();
+  
+  /** The color sensor sample provider. */
+  public static final SampleProvider colorSensor2 = new EV3ColorSensor(SensorPort.S3).getRedMode();
   
 }
