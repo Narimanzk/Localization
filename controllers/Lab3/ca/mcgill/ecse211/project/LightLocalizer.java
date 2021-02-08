@@ -10,73 +10,49 @@ import simlejos.ExecutionController;
  */
 public class LightLocalizer {
   
-  /**
-   * Threshold value to determine if a black line is detected or not
-   */
+  /* Threshold value to determine if a black line is detected or not */
   private static final int THRESHOLD = 10000;
  
+  /** Buffer (array) to store US1 samples. */
   private static float[] sensor1_data = new float[colorSensor1.sampleSize()];
   
+  /** Buffer (array) to store US2 samples. */
   private static float[] sensor2_data = new float[colorSensor2.sampleSize()];
   
+  //Values to operate color sensor
   private static int current_color_value_s1 = 1000;
-  
   private static int current_color_value_s2 = 1000;
   
-  private static double sampling_period = ((180* 0.005)/(Math.PI * WHEEL_RAD * FORWARD_SPEED));
-  
-  private static double d1;
-  
-  private static double d2;
-  
-  private static double prevsen1 = 0.0d;
-  
-  private static double prevsen2 = 0.0d;
   /**
    * Localizes the robot to (x, y, theta) = (1, 1, 0).
    */
   public static void localize() {
+    //Moving toward black line
     leftMotor.forward();
     rightMotor.forward();
-    while(true) {
-//      colorSensor1.fetchSample(sensor1_data, 0);
-//      colorSensor2.fetchSample(sensor2_data, 0);
-//      d1 = (((sensor1_data[0]*1000) - prevsen1) / sampling_period);
-//      d2 = (((sensor2_data[0]*1000) - prevsen2) / sampling_period);
-//      prevsen1 = sensor1_data[0]*1000;
-//      prevsen2 = sensor2_data[0]*1000;
-//      System.out.println("Sens1: " + d1 + " prevsen1: " + prevsen1 + " sesnor data: " + sensor1_data[0]);
-      //System.out.println("Sens2: " + sensor2_data[0]);
-      //if(d1 == 0 && d2 == 0) {
-        //System.out.println("Sens1: IF " + d1);
-        //System.out.println("Sens2: " + sensor2_data[0]);
-        //leftMotor.stop();
-        //rightMotor.stop();
-        //break;
-      //}
-      
-      
-      //ExecutionController.sleepFor((int)(sampling_period*1000));
-      
-      
-      if(blackLineTrigger()) {
+    
+    //First time that the robot pass the black line
+    while (true) {
+      if (blackLineTrigger()) {
         leftMotor.stop();
         rightMotor.stop();
-        moveStraightFor(-0.0273*2);
+        moveStraightFor(-0.0273 * 2);
         turnBy(90.0);
         break;
       }
     }
-    while(true) {
+    //Moving toward (1,1)
+    while (true) {
       leftMotor.setSpeed(FORWARD_SPEED);
       rightMotor.setSpeed(FORWARD_SPEED);
       leftMotor.forward();
       rightMotor.forward();
       
-      if(blackLineTrigger()) {
+      //When it reaches (1,1)
+      if (blackLineTrigger()) {
         leftMotor.stop();
         rightMotor.stop();
-        moveStraightFor(-0.0273*2);
+        moveStraightFor(-0.0273 * 2);
         turnBy(-90.0);
         break;
       }
@@ -140,20 +116,24 @@ public class LightLocalizer {
     return convertDistance((Math.PI * BASE_WIDTH * angle / 360.0) * 100) / 100;
   }
   
+  /**
+   * The method fetches data recorded by the color sensors in RedMode 
+   * and compares the most recent value to verify if the
+   * robot has traveled over a black line.
+   * Method makes use of a fixed threshold value which may not be reliable in
+   * certain conditions, however it has been tested and conditioned to minimize false negatives.
+   * @return true if black line is detected by both sensors.
+   */
   public static boolean blackLineTrigger() {
     colorSensor1.fetchSample(sensor1_data, 0);
     colorSensor2.fetchSample(sensor2_data, 0);
     
     current_color_value_s1 = (int) (sensor1_data[0] * 100);
-    
     current_color_value_s2 = (int) (sensor2_data[0] * 100);
     
-    System.out.println("Color1 val: " + current_color_value_s1);
-    System.out.println("Color2 val: " + current_color_value_s2);
-    if(current_color_value_s1 < THRESHOLD && current_color_value_s2 < THRESHOLD) {
+    if (current_color_value_s1 < THRESHOLD && current_color_value_s2 < THRESHOLD) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }

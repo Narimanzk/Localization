@@ -10,27 +10,11 @@ import simlejos.ExecutionController;
  */
 public class UltrasonicLocalizer {
   
-  /**
-   * Arbitrary threshold constant for rising and falling edge cases for the ultrasonic localizer
-   */
-  public static final int COMMON_D = 40;
 
-  /**
-   * Noise margin constant for falling edge ultrasonic localizer
-   */
-  public static final int FALLINGEDGE_K = 1;
-
-  /**
-   * Noise margin constant for rising edge ultrasonic localizer
-   */
-  public static final int RISINGEDGE_K = 3;
-  
-  private static int minInvalidSampleCount;
-  
-  private static int maxInvalidSampleCount;
-  
+  /** The previous distance recorded by ultrasonic sensor. */
   private static int prevDistance;
   
+  /** The latest distance recorded by ultrasonic sensor. */
   private static int distance;
   
   /** The number of invalid samples seen by filter() so far. */
@@ -39,23 +23,21 @@ public class UltrasonicLocalizer {
   /** Buffer (array) to store US samples. */
   private static float[] usData = new float[usSensor.sampleSize()];
   
-  /**
-   * angle at which back wall is detected
-   */
+  /** Angle at which back wall is detected. */
   public static double alpha;
-  /**
-   * angle at which left wall is detected
-   */
+  
+  /** Angle at which left wall is detected. */
   public static double beta;
   
   /**
    * Localizes the robot to theta = 0.
    */
   public static void localize() {
-    if(readUsDistance() < (COMMON_D - FALLINGEDGE_K)){
+    //Facing the robot toward the walls
+    if (readUsDistance() < (COMMON_D - FALLINGEDGE_K)) {
       risingEdge();
-    }
-    else {
+    //Facing the robot against the walls  
+    } else {
       fallingEdge();
     }
   }
@@ -67,46 +49,43 @@ public class UltrasonicLocalizer {
   * Then it rotates in the anti-clockwise direction to record value for beta.
   * Using the values recorded,
   * the robot will then appropriately orient itself accordingly along the 0 degree y-axis.
-  * 
-  * @author Narry Zendehrooh
   */
   public static void fallingEdge() {
     
-    // clockwise rotation to record value for alpha
+    // Clockwise rotation to record value for alpha
     leftMotor.setSpeed(ROTATE_SPEED);
     rightMotor.setSpeed(-1 * ROTATE_SPEED);
     leftMotor.forward();
     rightMotor.backward();
-    while(true) {
-      int readus = readUsDistance();
-      //System.out.println("READUS BEFORE: " + readus);
-      if(readus < COMMON_D - FALLINGEDGE_K) {
-        //System.out.println("READUS: " + readus);
+    
+    while (true) {
+      if (readUsDistance() < COMMON_D - FALLINGEDGE_K) {
         alpha = odometer.getXyt()[2];
         leftMotor.setSpeed(0);
         rightMotor.setSpeed(0);
         break;
       }
     }
-     //anti-clockwise rotation to record beta value
+    // Anti-clockwise rotation to record beta value
     turnBy(-alpha);
     leftMotor.backward();
     rightMotor.forward();
     
-    while(true) {
-      if(readUsDistance() < COMMON_D - FALLINGEDGE_K) {
+    while (true) {
+      if (readUsDistance() < COMMON_D - FALLINGEDGE_K) {
         beta = odometer.getXyt()[2];
         leftMotor.setSpeed(0);
         rightMotor.setSpeed(0);
         break;
       }
     }
-    System.out.println("THETA: " + odometer.getXyt()[2] + " ALPHA: " + alpha + " BETA: " + beta);
-    if (alpha < beta)
+    
+    if (alpha < beta) {
       odometer.setTheta((225 - (alpha + beta) / 2) + odometer.getXyt()[2]);
-    else
+    } else {
       odometer.setTheta((45 - (alpha + beta) / 2) + odometer.getXyt()[2]);
-
+    }
+    
     // Approximately orienting against the 0 degree y-axis.
     leftMotor.setSpeed(ROTATE_SPEED);
     rightMotor.setSpeed(-1 * ROTATE_SPEED);
@@ -114,18 +93,24 @@ public class UltrasonicLocalizer {
     
   }
   
+  /**
+   * Method performs the rising edge localization.
+   * Robot always completes an clockwise rotation around its center of
+   * rotation to record the value for alpha.
+   * Then it rotates in the anti-clockwise direction to record value for beta.
+   * Using the values recorded,
+   * the robot will then appropriately orient itself accordingly along the 0 degree y-axis.
+   */
   public static void risingEdge() {
     
-  // clockwise rotation to record alpha value
+    // clockwise rotation to record alpha value
     leftMotor.setSpeed(ROTATE_SPEED);
     rightMotor.setSpeed(-1 * ROTATE_SPEED);
     leftMotor.forward();
     rightMotor.backward();
-    while(true) {
-      int readus = readUsDistance();
-      //System.out.println("RISING: " + readus);
-      if(readus > COMMON_D - FALLINGEDGE_K) {
-        //System.out.println("READUS: " + readus);
+    
+    while (true) {
+      if (readUsDistance() > COMMON_D - FALLINGEDGE_K) {
         alpha = odometer.getXyt()[2];
         leftMotor.setSpeed(0);
         rightMotor.setSpeed(0);
@@ -133,25 +118,26 @@ public class UltrasonicLocalizer {
       }
     }
     
-  //anti-clockwise rotation to record beta value
+    //anti-clockwise rotation to record beta value
     turnBy(-alpha);
     leftMotor.backward();
     rightMotor.forward();
     
-    while(true) {
-      if(readUsDistance() > COMMON_D - FALLINGEDGE_K) {
+    while (true) {
+      if (readUsDistance() > COMMON_D - FALLINGEDGE_K) {
         beta = odometer.getXyt()[2];
         leftMotor.setSpeed(0);
         rightMotor.setSpeed(0);
         break;
       }
     }
-    System.out.println("THETA: " + odometer.getXyt());
-    if (alpha > beta)
+    
+    if (alpha > beta) {
       odometer.setTheta((225 - (alpha + beta) / 2) + odometer.getXyt()[2]);
-    else
+    } else {
       odometer.setTheta((45 - (alpha + beta) / 2) + odometer.getXyt()[2]);
-
+    }
+    
     // Approximately orienting against the 0 degree y-axis.
     leftMotor.setSpeed(ROTATE_SPEED);
     rightMotor.setSpeed(-1 * ROTATE_SPEED);
@@ -200,7 +186,7 @@ public class UltrasonicLocalizer {
   /** Returns the filtered distance between the US sensor and an obstacle in cm. */
   public static int readUsDistance() {
     int[] filterArr = new int[21]; 
-    for(int i = 0; i < filterArr.length; i++) {
+    for (int i = 0; i < filterArr.length; i++) {
       usSensor.fetchSample(usData, 0);
       filterArr[i] = (int) usData[0] * 100; 
       ExecutionController.sleepFor(60);
@@ -211,11 +197,12 @@ public class UltrasonicLocalizer {
   /**
    * Rudimentary filter - toss out invalid samples corresponding to null signal.
    *
-   * @param distance raw distance measured by the sensor in cm
+   * @param distance raw distance array measured by the sensor in cm
    * @return the filtered distance in cm
    */
   static int filter(int[] arr) {
     Arrays.sort(arr);
+    //Mean distance value
     distance = arr[10];
     if (distance >= MAX_SENSOR_DIST && invalidSampleCount < INVALID_SAMPLE_LIMIT) {
       // bad value, increment the filter value and return the distance remembered from before

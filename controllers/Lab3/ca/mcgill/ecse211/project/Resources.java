@@ -57,6 +57,21 @@ public class Resources {
   /** The limit of invalid samples that we read from the US sensor before assuming no obstacle. */
   public static final int INVALID_SAMPLE_LIMIT = 20;
   
+  /**
+   * Arbitrary threshold constant for rising and falling edge cases for the ultrasonic localizer
+   */
+  public static final int COMMON_D = 40;
+
+  /**
+   * Noise margin constant for falling edge ultrasonic localizer
+   */
+  public static final int FALLINGEDGE_K = 1;
+
+  /**
+   * Noise margin constant for rising edge ultrasonic localizer
+   */
+  public static final int RISINGEDGE_K = 3;
+  
   /** The odometer. */
   public static Odometer odometer = Odometer.getOdometer();
   
