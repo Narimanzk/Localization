@@ -80,9 +80,9 @@ public class UltrasonicLocalizer {
       }
     }
     
-    if (alpha < beta) {
+    if (alpha < beta) { // back wall is closer
       odometer.setTheta((229.8 - (alpha + beta) / 2) + odometer.getXyt()[2]);
-    } else {
+    } else { // left wall is closer
       odometer.setTheta((45 - (alpha + beta) / 2) + odometer.getXyt()[2]);
     }
     
@@ -132,9 +132,9 @@ public class UltrasonicLocalizer {
       }
     }
     
-    if (alpha > beta) {
+    if (alpha > beta) { //left wall is closer
       odometer.setTheta((229.8 - (alpha + beta) / 2) + odometer.getXyt()[2]);
-    } else {
+    } else { //back wall is closer
       odometer.setTheta((47 - (alpha + beta) / 2) + odometer.getXyt()[2]);
     }
     
@@ -186,6 +186,7 @@ public class UltrasonicLocalizer {
   /** Returns the filtered distance between the US sensor and an obstacle in cm. */
   public static int readUsDistance() {
     int[] filterArr = new int[21]; 
+    
     for (int i = 0; i < filterArr.length; i++) {
       usSensor.fetchSample(usData, 0);
       filterArr[i] = (int) usData[0] * 100; 

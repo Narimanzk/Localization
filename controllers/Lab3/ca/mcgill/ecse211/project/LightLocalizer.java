@@ -160,6 +160,7 @@ public class LightLocalizer {
    * robot has traveled over a black line.
    * Method makes use of a fixed threshold value which may not be reliable in
    * certain conditions, however it has been tested and conditioned to minimize false negatives.
+   * @param the color sensor and the data recorded by the color sensor
    * @return true if black line is detected by both sensors.
    */
   public static boolean blackLineTrigger(SampleProvider colorSensor, float[] sensor) {

@@ -29,7 +29,6 @@ public class Main {
     rightMotor.setSpeed(FORWARD_SPEED);
     new Thread(odometer).start();
 
-    // TODO Implement the localizers in their respective classes.
     UltrasonicLocalizer.localize();
     pause();
     LightLocalizer.localize();
