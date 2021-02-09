@@ -202,7 +202,7 @@ public class UltrasonicLocalizer {
    */
   static int filter(int[] arr) {
     Arrays.sort(arr);
-    //Mean distance value
+    //Median distance value
     distance = arr[10];
     if (distance >= MAX_SENSOR_DIST && invalidSampleCount < INVALID_SAMPLE_LIMIT) {
       // bad value, increment the filter value and return the distance remembered from before
