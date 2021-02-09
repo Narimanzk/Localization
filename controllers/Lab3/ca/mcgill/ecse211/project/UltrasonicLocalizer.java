@@ -83,7 +83,7 @@ public class UltrasonicLocalizer {
     if (alpha < beta) {
       odometer.setTheta((229.8 - (alpha + beta) / 2) + odometer.getXyt()[2]);
     } else {
-      odometer.setTheta((43 - (alpha + beta) / 2) + odometer.getXyt()[2]);
+      odometer.setTheta((45 - (alpha + beta) / 2) + odometer.getXyt()[2]);
     }
     
     // Approximately orienting against the 0 degree y-axis.
@@ -135,7 +135,7 @@ public class UltrasonicLocalizer {
     if (alpha > beta) {
       odometer.setTheta((229.8 - (alpha + beta) / 2) + odometer.getXyt()[2]);
     } else {
-      odometer.setTheta((43 - (alpha + beta) / 2) + odometer.getXyt()[2]);
+      odometer.setTheta((47 - (alpha + beta) / 2) + odometer.getXyt()[2]);
     }
     
     // Approximately orienting against the 0 degree y-axis.

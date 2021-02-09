@@ -7,12 +7,15 @@ import simlejos.robotics.SampleProvider;
 
 /**
  * The light localizer.
- * TODO: Give an overview of your light localizer here, in the Javadoc comment.
+ * This class implements the light localizer routine.
+ * It uses two color sensors to first detect the horizontal line.
+ * Then it turns toward (1,1) point and when it reaches there
+ * it will turn and stay at (1,1).
  */
 public class LightLocalizer {
   
   /* Threshold value to determine if a black line is detected or not */
-  private static final int THRESHOLD = 10000;
+  private static final int THRESHOLD = 60;
  
   /** Buffer (array) to store US1 samples. */
   private static float[] sensor1_data = new float[colorSensor1.sampleSize()];
@@ -21,7 +24,8 @@ public class LightLocalizer {
   private static float[] sensor2_data = new float[colorSensor2.sampleSize()];
   
   //Values to operate color sensor
-  private static int current_color_value = 1000;
+  private static int current_color_blue = 1000;
+  private static int current_color_red = 1000;
   
   /**
    * Localizes the robot to (x, y, theta) = (1, 1, 0).
@@ -33,27 +37,28 @@ public class LightLocalizer {
     
     //First time that the robot pass the black line
     while (true) {
-      if (blackLineTrigger(colorSensor1, sensor1_data) &&  blackLineTrigger(colorSensor2, sensor2_data)) {
+      if (blackLineTrigger(colorSensor1, sensor1_data) 
+          &&  blackLineTrigger(colorSensor2, sensor2_data)) {
         leftMotor.stop();
         rightMotor.stop();
-        moveStraightFor(-0.0273 * 2);
+        moveStraightFor(-0.0273);
         turnBy(90.0);
         break;
-      }
-      else if (blackLineTrigger(colorSensor1, sensor1_data)) {
+      //When sensor 1 reaches the black line first
+      } else if (blackLineTrigger(colorSensor1, sensor1_data)) {
         rightMotor.stop();
         if (blackLineTrigger(colorSensor2, sensor2_data)) {
           leftMotor.stop();
-          moveStraightFor(-0.0273 * 2);
+          moveStraightFor(-0.0273);
           turnBy(90.0);
           break;
         }
-      }
-      else if (blackLineTrigger(colorSensor2, sensor2_data)) {
+      //When sensor 2 reaches the black line first
+      } else if (blackLineTrigger(colorSensor2, sensor2_data)) {
         leftMotor.stop();
         if (blackLineTrigger(colorSensor1, sensor1_data)) {
           rightMotor.stop();
-          moveStraightFor(-0.0273 * 2);
+          moveStraightFor(-0.0273);
           turnBy(90.0);
           break;
         }
@@ -65,28 +70,27 @@ public class LightLocalizer {
       rightMotor.setSpeed(FORWARD_SPEED);
       leftMotor.forward();
       rightMotor.forward();      
-//      //When it reaches (1,1)
-      if (blackLineTrigger(colorSensor1, sensor1_data) &&  blackLineTrigger(colorSensor2, sensor2_data)) {
+      //When it reaches (1,1)
+      if (blackLineTrigger(colorSensor1, sensor1_data)
+          && blackLineTrigger(colorSensor2, sensor2_data)) {
         leftMotor.stop();
         rightMotor.stop();
-        moveStraightFor(-0.0273 * 2);
+        moveStraightFor(-0.0273 * 3);
         turnBy(-90.0);
         break;
-      }
-      else if (blackLineTrigger(colorSensor1, sensor1_data)) {
+      } else if (blackLineTrigger(colorSensor1, sensor1_data)) {
         rightMotor.stop();
         if (blackLineTrigger(colorSensor2, sensor2_data)) {
           leftMotor.stop();
-          moveStraightFor(-0.0273 * 2);
+          moveStraightFor(-0.0273 * 3);
           turnBy(-90.0);
           break;
         }
-      }
-      else if (blackLineTrigger(colorSensor2, sensor2_data)) {
+      } else if (blackLineTrigger(colorSensor2, sensor2_data)) {
         leftMotor.stop();
         if (blackLineTrigger(colorSensor1, sensor1_data)) {
           rightMotor.stop();
-          moveStraightFor(-0.0273 * 2);
+          moveStraightFor(-0.0273 * 3);
           turnBy(-90.0);
           break;
         }
@@ -161,9 +165,10 @@ public class LightLocalizer {
   public static boolean blackLineTrigger(SampleProvider colorSensor, float[] sensor) {
     colorSensor.fetchSample(sensor, 0);
     
-    current_color_value = (int) (sensor[0] * 100);
-    
-    if (current_color_value < THRESHOLD) {
+    current_color_blue = (int) (sensor[2]);
+    current_color_red = (int) (sensor[0]);
+
+    if (current_color_blue < THRESHOLD && current_color_red < THRESHOLD) {
       return true;
     } else {
       return false;
