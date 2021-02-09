@@ -75,14 +75,14 @@ public class LightLocalizer {
           && blackLineTrigger(colorSensor2, sensor2_data)) {
         leftMotor.stop();
         rightMotor.stop();
-        moveStraightFor(-0.0273 * 3);
+        moveStraightFor(-0.0273 * 3.5);
         turnBy(-90.0);
         break;
       } else if (blackLineTrigger(colorSensor1, sensor1_data)) {
         rightMotor.stop();
         if (blackLineTrigger(colorSensor2, sensor2_data)) {
           leftMotor.stop();
-          moveStraightFor(-0.0273 * 3);
+          moveStraightFor(-0.0273 * 3.5);
           turnBy(-90.0);
           break;
         }
@@ -90,7 +90,7 @@ public class LightLocalizer {
         leftMotor.stop();
         if (blackLineTrigger(colorSensor1, sensor1_data)) {
           rightMotor.stop();
-          moveStraightFor(-0.0273 * 3);
+          moveStraightFor(-0.0273 * 3.5);
           turnBy(-90.0);
           break;
         }
